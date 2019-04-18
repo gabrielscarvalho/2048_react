@@ -1,21 +1,25 @@
 {
-  "name": "2048-react",
-  "version": "1.0.0",
-  "description": "the game 2048 made in reactjs",
-  "main": "index.js",
+  "name": "2048",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "2.1.8"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "keywords": [
-    "game",
-    "2048",
-    "react"
-  ],
-  "author": "gabrielsc",
-  "license": "ISC",
-  "devDependencies": {
-    "bootstrap": "^4.3.1",
-    "react": "^16.8.6"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "dependencies": {}
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
