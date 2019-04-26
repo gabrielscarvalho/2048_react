@@ -11,8 +11,8 @@ class Board extends Component {
       let data = []
       data[0] = [ 0,0,0,0 ]
       data[1] = [ 0,0,0,0 ]
-      data[2] = [ 0,64,64,128 ]
-      data[3] = [ 1024,512,256,128 ]
+      data[2] = [ 0,0,0,0 ]
+      data[3] = [ 0,0,0,0 ]
       this.state = {data};
       this.matrix = new Matrix(data);
       this.onPressUp = this.onPressUp.bind(this);
