@@ -64,8 +64,7 @@ class Board extends Component {
    addRandom() {
         let list = this.shuffleArray([0,1,2,3]);
         let data = Object.assign({}, this.state.data);
-        console.log(list);
-        debugger;
+
 
         for(let i =0 ; i< list.length; i++) {
             let line = list[i];
@@ -103,6 +102,10 @@ class Board extends Component {
       });
    }
 
+  sumPoints(data) {
+
+    return data[0].reduce((x,y) => x+y) + data[1].reduce((x,y) => x+y) + data[2].reduce((x,y) => x+y) + data[3].reduce((x,y) => x+y);
+  }
    
   render() {
     const {data} = this.state;
@@ -114,6 +117,7 @@ class Board extends Component {
                 {data[2].map( val => (<Box value={val}/>))}
                 {data[3].map( val => (<Box value={val}/>))}
             </div>
+            <div>Total Points: <span>{this.sumPoints(data)}</span></div>
             <button onClick={this.onPressUp}>Up</button>
             <button onClick={this.onPressDown}>Down</button>
             <button onClick={this.onPressLeft}>Left</button>
