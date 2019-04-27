@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import './Board.css';
 import Box from './Box';
-import Matrix from './matrix'
+import Matrix from './logic/matrix'
 
 class Board extends Component {
 
   constructor(props) {
       super(props);
 
-      let data = []
-      data[0] = [ 0,0,0,0 ]
-      data[1] = [ 0,0,0,0 ]
-      data[2] = [ 0,0,0,0 ]
-      data[3] = [ 0,0,0,0 ]
+      let data = Matrix.emptyBoardData();
       this.state = {data};
       this.matrix = new Matrix(data);
       this.onPressUp = this.onPressUp.bind(this);
@@ -62,7 +58,7 @@ class Board extends Component {
 
 
    addRandom() {
-        let list = this.shuffleArray([0,1,2,3]);
+      /*  let list = this.shuffleArray([0,1,2,3]);
         let data = Object.assign({}, this.state.data);
 
 
@@ -75,29 +71,29 @@ class Board extends Component {
                 this.setState({data});
                 return;
             }
-        }
+        }*/
    }
 
   onPressUp(){
-      this.setState({data: this.matrix.onPressUp()}, ()=> {
+      this.setState({data: this.matrix.pressedUp()}, ()=> {
         this.addRandom();
       });
   }
 
   onPressDown(){
-    this.setState({data: this.matrix.onPressDown()}, ()=> {
+    this.setState({data: this.matrix.pressedDown()}, ()=> {
         this.addRandom();
       });
    }
 
    onPressRight(){
-    this.setState({data: this.matrix.onPressRight()}, ()=> {
+    this.setState({data: this.matrix.pressedRight()}, ()=> {
         this.addRandom();
       });
    }
 
    onPressLeft(){
-    this.setState({data: this.matrix.onPressLeft()}, ()=> {
+    this.setState({data: this.matrix.pressedLeft()}, ()=> {
         this.addRandom();
       });
    }
@@ -112,10 +108,11 @@ class Board extends Component {
     return (
         <div>
             <div className="board">
-                {data[0].map( val => (<Box value={val}/>))}
-                {data[1].map( val => (<Box value={val}/>))}
-                {data[2].map( val => (<Box value={val}/>))}
-                {data[3].map( val => (<Box value={val}/>))}
+                {data[0].map( boxData => (<Box value={boxData.value}/>))}
+                {data[1].map( boxData => (<Box value={boxData.value}/>))}
+                {data[2].map( boxData => (<Box value={boxData.value}/>))}
+                {data[3].map( boxData => (<Box value={boxData.value}/>))}
+               
             </div>
             <div>Total Points: <span>{this.sumPoints(data)}</span></div>
             <button onClick={this.onPressUp}>Up</button>

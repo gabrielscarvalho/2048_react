@@ -1,5 +1,5 @@
 export const MAX_LINE = 3;
-export const MAX_COLUMN = 6;
+export const MAX_COLUMN = 3;
 
 
 /**

@@ -26,6 +26,10 @@ class Matrix {
         }
     }
 
+    /**
+     * Provides an empty board data.
+     * @return array
+    */
     static emptyBoardData() {
         let data = [];
 
@@ -61,6 +65,7 @@ class Matrix {
             });
         }
         this.cleanGarbage();
+        return this.data;
     }
 
     /**
@@ -84,6 +89,7 @@ class Matrix {
             });
         }
         this.cleanGarbage();
+        return this.data;
     }
 
     /**
@@ -107,6 +113,7 @@ class Matrix {
             });
         }
         this.cleanGarbage();
+        return this.data;
     }
 
     /**
@@ -130,6 +137,7 @@ class Matrix {
             });
         }
         this.cleanGarbage();
+        return this.data;
     }
 
 
