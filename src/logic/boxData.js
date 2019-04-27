@@ -45,8 +45,9 @@ export class BoxData {
     }
 
 
-    cleanPosition() {
+    cleanTemporaryData() {
         this.position = null;
+        this.untouched = true;
     }
 
     /**

@@ -19,3 +19,12 @@ matrix.print();
 
 matrix.pressedUp();
 matrix.print();
+
+matrix.pressedLeft();
+matrix.print();
+
+matrix.pressedDown();
+matrix.print();
+
+matrix.pressedRight();
+matrix.print();

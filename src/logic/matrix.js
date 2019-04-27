@@ -45,20 +45,90 @@ class Matrix {
      */
     pressedUp() {
         const self = this;
-        this.forEveryElement(TOP_TO_DOWN, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
-           
-            if(top) {
-                if(top.canMerge(elm)) {
-                    top.merge(elm);
-                    self.updateData([top, elm]);
-                } else if(top.canProvidePosition()) {
-                    top.receives(elm);
-                    self.updateData([top, elm]);
+
+        for(let line = 0; line <= MAX_LINE; line++) {
+            this.forEveryElement(TOP_TO_DOWN, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
+            
+                if(top) {
+                    if(top.canMerge(elm)) {
+                        top.merge(elm);
+                        self.updateData([top, elm]);
+                    } else if(top.canProvidePosition()) {
+                        top.receives(elm);
+                        self.updateData([top, elm]);
+                    }
                 }
-            }
-            self.print();
-        });
-       
+            });
+        }
+        this.cleanGarbage();
+    }
+
+    /**
+     * When user pressed down button.
+     */
+    pressedDown() {
+        const self = this;
+
+        for(let line = 0; line <= MAX_LINE; line++) {
+            this.forEveryElement(DOWN_TO_TOP, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
+            
+                if(bottom) {
+                    if(bottom.canMerge(elm)) {
+                        bottom.merge(elm);
+                        self.updateData([bottom, elm]);
+                    } else if(bottom.canProvidePosition()) {
+                        bottom.receives(elm);
+                        self.updateData([bottom, elm]);
+                    }
+                }
+            });
+        }
+        this.cleanGarbage();
+    }
+
+    /**
+     * When user pressed left button.
+     */
+    pressedLeft() {
+        const self = this;
+
+        for(let column = 0; column <= MAX_COLUMN; column++) {
+            this.forEveryElement(DOWN_TO_TOP, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
+            
+                if(left) {
+                    if(left.canMerge(elm)) {
+                        left.merge(elm);
+                        self.updateData([left, elm]);
+                    } else if(left.canProvidePosition()) {
+                        left.receives(elm);
+                        self.updateData([left, elm]);
+                    }
+                }
+            });
+        }
+        this.cleanGarbage();
+    }
+
+    /**
+     * When user pressed right button.
+     */
+    pressedRight() {
+        const self = this;
+
+        for(let column = 0; column <= MAX_COLUMN; column++) {
+            this.forEveryElement(DOWN_TO_TOP, RIGHT_TO_LEFT, (elm, left, top, right, bottom) => {
+            
+                if(right) {
+                    if(right.canMerge(elm)) {
+                        right.merge(elm);
+                        self.updateData([right, elm]);
+                    } else if(right.canProvidePosition()) {
+                        right.receives(elm);
+                        self.updateData([right, elm]);
+                    }
+                }
+            });
+        }
         this.cleanGarbage();
     }
 
@@ -83,12 +153,11 @@ class Matrix {
                 const position = new Position(line, column);
 
                 const elem = self.getElement(position, true); 
-                let top, bottom, left, right = null;
 
-                top = self.getClosestRealTop(elem);
-                bottom = self.getElement(position.getBottom());
-                left = self.getElement(position.getLeft());
-                right = self.getElement(position.getRight());
+                let top = self.getElement(position.getTop());
+                let bottom = self.getElement(position.getBottom());
+                let left = self.getElement(position.getLeft());
+                let right = self.getElement(position.getRight());
 
                 callback(elem, left, top, right, bottom);
             })
@@ -96,20 +165,6 @@ class Matrix {
         });
     }
 
-
-    getClosestRealTop(elm) {
-        let nextPos = elm.position.getTop();
-        let top = null;
-        while(true){
-
-            top = this.getElement(nextPos);
-            if(top === null || top.value > 0 || !top.position.getTop().isValid()) {
-                break;
-            }
-            nextPos = top.position.getTop();
-        }
-        return top;
-    }
 
     /**
      * Execute the for lace in each line and return the position.
@@ -200,7 +255,7 @@ class Matrix {
             
             if(elm.position.isValid()){
                 const {line, column} = elm.position;
-                elm.cleanPosition();
+                elm.cleanTemporaryData();
                 self.data[line][column] = elm;
             } else {
                 throw new Error('Cannot clean invalid position');
