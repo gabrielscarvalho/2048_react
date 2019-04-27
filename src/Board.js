@@ -2,125 +2,99 @@ import React, { Component } from 'react';
 import './Board.css';
 import Box from './Box';
 import Matrix from './logic/matrix'
+import {MAX_LINE, MAX_COLUMN} from './logic/position';
 
 class Board extends Component {
 
   constructor(props) {
-      super(props);
+    super(props);
 
-      let data = Matrix.emptyBoardData();
-      this.state = {data};
-      this.matrix = new Matrix(data);
-      this.onPressUp = this.onPressUp.bind(this);
-      this.onPressDown = this.onPressDown.bind(this);
-      this.onPressRight = this.onPressRight.bind(this);
-      this.onPressLeft = this.onPressLeft.bind(this);
+    let data = Matrix.emptyBoardData();
     
-      this.checkKey = this.checkKey.bind(this);
-      document.onkeydown = this.checkKey;
-    }
-
-    checkKey(e) {
-      
-        e = e || window.event;
+    this.matrix = new Matrix(data);
     
-        if (e.keyCode == '38') {
-            this.onPressUp();
-        }
-        else if (e.keyCode == '40') {
-          this.onPressDown();
-        }
-        else if (e.keyCode == '37') {
-          this.onPressLeft();
-        }
-        else if (e.keyCode == '39') {
-          this.onPressRight();
-        }
     
-    }
+    this.state = {data: this.matrix.addRandom()};
 
+    this.onPressUp = this.onPressUp.bind(this);
+    this.onPressDown = this.onPressDown.bind(this);
+    this.onPressRight = this.onPressRight.bind(this);
+    this.onPressLeft = this.onPressLeft.bind(this);
 
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    getAllIndexes(arr, val) {
-        var indexes = [], i = -1;
-        while ((i = arr.indexOf(val, i+1)) != -1){
-            indexes.push(i);
-        }
-        return indexes;
-    }
-
-
-   addRandom() {
-      /*  let list = this.shuffleArray([0,1,2,3]);
-        let data = Object.assign({}, this.state.data);
-
-
-        for(let i =0 ; i< list.length; i++) {
-            let line = list[i];
-            if(data[line].includes(0)) {
-                let zerosColumns = this.shuffleArray(this.getAllIndexes(data[line], 0))
-                let column = zerosColumns[0];
-                data[line][column] = this.shuffleArray([2,2,2,2,4,4,8])[0];
-                this.setState({data});
-                return;
-            }
-        }*/
-   }
-
-  onPressUp(){
-      this.setState({data: this.matrix.pressedUp()}, ()=> {
-        this.addRandom();
-      });
+    this.checkKey = this.checkKey.bind(this);
+    document.onkeydown = this.checkKey;
   }
 
-  onPressDown(){
-    this.setState({data: this.matrix.pressedDown()}, ()=> {
-        this.addRandom();
-      });
-   }
+  checkKey(e) {
 
-   onPressRight(){
-    this.setState({data: this.matrix.pressedRight()}, ()=> {
-        this.addRandom();
-      });
-   }
+    e = e || window.event;
 
-   onPressLeft(){
-    this.setState({data: this.matrix.pressedLeft()}, ()=> {
-        this.addRandom();
-      });
-   }
+    if (e.keyCode == '38') {
+      this.onPressUp();
+    }
+    else if (e.keyCode == '40') {
+      this.onPressDown();
+    }
+    else if (e.keyCode == '37') {
+      this.onPressLeft();
+    }
+    else if (e.keyCode == '39') {
+      this.onPressRight();
+    }
+
+  }
+
+  onPressUp() {
+    this.setState({ data: this.matrix.pressedUp() }, () => {
+      this.setState({ data: this.matrix.addRandom() });
+    });
+  }
+
+  onPressDown() {
+    this.setState({ data: this.matrix.pressedDown() }, () => {
+      this.setState({ data: this.matrix.addRandom() });
+    });
+  }
+
+  onPressRight() {
+    this.setState({ data: this.matrix.pressedRight() }, () => {
+      this.setState({ data: this.matrix.addRandom() });
+    });
+  }
+
+  onPressLeft() {
+    this.setState({ data: this.matrix.pressedLeft() }, () => {
+      this.setState({ data: this.matrix.addRandom() });
+    });
+  }
 
   sumPoints(data) {
-
-    return data[0].reduce((x,y) => x+y) + data[1].reduce((x,y) => x+y) + data[2].reduce((x,y) => x+y) + data[3].reduce((x,y) => x+y);
+    return this.matrix.getPoints();
   }
-   
+
+
   render() {
     const {data} = this.state;
     return (
-        <div>
-            <div className="board">
-                {data[0].map( boxData => (<Box value={boxData.value}/>))}
-                {data[1].map( boxData => (<Box value={boxData.value}/>))}
-                {data[2].map( boxData => (<Box value={boxData.value}/>))}
-                {data[3].map( boxData => (<Box value={boxData.value}/>))}
-               
-            </div>
-            <div>Total Points: <span>{this.sumPoints(data)}</span></div>
-            <button onClick={this.onPressUp}>Up</button>
-            <button onClick={this.onPressDown}>Down</button>
-            <button onClick={this.onPressLeft}>Left</button>
-            <button onClick={this.onPressRight}>Right</button>
-            
-            
+      <div>
+        <div className="board">
+
+          { data.map(line => {
+              return line.map(boxData =>  
+                <Box value={boxData.value}/> 
+              )
+            })
+          }
+          
+      
+        </div>
+        <div>Total Points: <span>{this.sumPoints(data)}</span></div>
+        <button onClick={this.onPressUp}>Up</button>
+        <button onClick={this.onPressDown}>Down</button>
+        <button onClick={this.onPressLeft}>Left</button>
+        <button onClick={this.onPressRight}>Right</button>
+
+
       </div>
     );
   }

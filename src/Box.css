@@ -1,8 +1,8 @@
 
 
 .box {
-    flex: 1 0 21%;
-    width: 60px;
+    flex: 1 0 calc(100%/6);
+    width: 50px;
     height: 60px;
     font-size: 30px;
     border: 1px solid #000;

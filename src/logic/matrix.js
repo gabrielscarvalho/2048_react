@@ -1,6 +1,7 @@
 
 import { Position, MAX_COLUMN, MAX_LINE} from './position';
 import BoxData from './boxData';
+import { getRandomFromList } from '../util/random';
 
 const TOP_TO_DOWN = Symbol('TOP-TO-DOWN');
 const DOWN_TO_TOP = Symbol('DOWN-TO-TOP');
@@ -9,7 +10,7 @@ const LEFT_TO_RIGHT = Symbol('LEFT-TO-RIGHT');
 const RIGHT_TO_LEFT = Symbol('RIGHT-TO-LEFT');
 
 
-
+const RANDOM_VALUES = [2,2,2,2,2,2,4,4,4,8];
 
 /**
  * Class that deals with the matrix of data.
@@ -38,7 +39,7 @@ class Matrix {
                 if(typeof data[line] === 'undefined') {
                     data[line] = [];
                 }
-                data[line][column] =  new BoxData(2, true);
+                data[line][column] =  new BoxData(0, true);
             }
         }
         return data;
@@ -64,7 +65,7 @@ class Matrix {
                 }
             });
         }
-        this.cleanGarbage();
+        this.cleanGarbage();        
         return this.data;
     }
 
@@ -116,6 +117,7 @@ class Matrix {
         return this.data;
     }
 
+    
     /**
      * When user pressed right button.
      */
@@ -270,6 +272,36 @@ class Matrix {
             }
             
         });
+    }
+
+
+    /**
+     * Adds a new random value to the list
+     * 
+    */
+    addRandom() {
+        const empties = [];
+        this.forEveryElement(TOP_TO_DOWN, LEFT_TO_RIGHT, (elm) => {
+            if(elm.value === 0) {
+                empties.push(elm);
+            }
+        });
+
+        const randomElm = getRandomFromList(empties);
+        if(randomElm) {
+            randomElm.value = getRandomFromList(RANDOM_VALUES);
+            this.updateData(randomElm);
+        }
+        return this.data;
+    }
+
+    getPoints() {
+        let total = 0;
+        this.forEveryElement(TOP_TO_DOWN, LEFT_TO_RIGHT, (elm) => {
+            total = total + elm.value;
+        });
+
+        return total;
     }
 
     /**

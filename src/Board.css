@@ -1,8 +1,8 @@
 .board {
     display: flex;
     flex-wrap: wrap;
-    width: 252px;
-    height: 264px;
+    width: calc(70px*5);
+    height: calc(70px*5);
     border: 2px solid #333;
     box-shadow: 0 0 12px #333;    
     border-radius: 2%;
