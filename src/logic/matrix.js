@@ -19,7 +19,7 @@ class Matrix {
 
 
     constructor(data) { 
-        if (typeof data === 'array' && data.length === MAX_LINE + 1){
+        if (Array.isArray(data) && data.length === MAX_LINE + 1){
             this.data = data;
         } else {
             throw new Error (`Informed data does not has expected format. Received [${data}]`);
@@ -34,7 +34,7 @@ class Matrix {
                 if(typeof data[line] === 'undefined') {
                     data[line] = [];
                 }
-                data[line][column] =  new BoxData(0, true);
+                data[line][column] =  new BoxData(2, true);
             }
         }
         return data;
@@ -45,14 +45,20 @@ class Matrix {
      */
     pressedUp() {
         const self = this;
-        this.forEveryElement(DOWN_TO_TOP, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
-            if(top.canMerge(elm)) {
-                top.merge(elm);
-                elm.clean();
-                self.updateData([top, elm]);
+        this.forEveryElement(TOP_TO_DOWN, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
+           
+            if(top) {
+                if(top.canMerge(elm)) {
+                    top.merge(elm);
+                    self.updateData([top, elm]);
+                } else if(top.canProvidePosition()) {
+                    top.receives(elm);
+                    self.updateData([top, elm]);
+                }
             }
+            self.print();
         });
-
+       
         this.cleanGarbage();
     }
 
@@ -77,15 +83,32 @@ class Matrix {
                 const position = new Position(line, column);
 
                 const elem = self.getElement(position, true); 
-                const top = self.getElement(position.getTop());
-                const bottom = self.getElement(position.getBottom());
-                const left = self.getElement(position.getLeft());
-                const right = self.getElement(position.getRight());
+                let top, bottom, left, right = null;
+
+                top = self.getClosestRealTop(elem);
+                bottom = self.getElement(position.getBottom());
+                left = self.getElement(position.getLeft());
+                right = self.getElement(position.getRight());
 
                 callback(elem, left, top, right, bottom);
             })
 
         });
+    }
+
+
+    getClosestRealTop(elm) {
+        let nextPos = elm.position.getTop();
+        let top = null;
+        while(true){
+
+            top = this.getElement(nextPos);
+            if(top === null || top.value > 0 || !top.position.getTop().isValid()) {
+                break;
+            }
+            nextPos = top.position.getTop();
+        }
+        return top;
     }
 
     /**
@@ -134,7 +157,7 @@ class Matrix {
     */
     getElement(position, mustExist = false) {
      
-        if (position && position.isValidPosition()) {
+        if (position && position.isValid()) {
             const elem = this.data[position.line][position.column];
             elem.setPosition(position);
             return elem;
@@ -151,7 +174,7 @@ class Matrix {
     */
     updateData(elms) {
         const self = this;
-        if(typeof elms !== 'array') {
+        if(!Array.isArray(elms)) {
             elms = [elms];
         }
 
@@ -160,7 +183,7 @@ class Matrix {
                 throw new Error('Cannot update null element or without position');
             }
             
-            if (elm.position.isValidPosition()) {
+            if (elm.position.isValid()) {
                 const {line, column} = elm.position;
                 self.data[line][column] = elm;
             }
@@ -174,8 +197,15 @@ class Matrix {
     cleanGarbage() {
         const self = this;
         this.forEveryElement(DOWN_TO_TOP, LEFT_TO_RIGHT, (elm, left, top, right, bottom) => {
-            elm.cleanPosition();
-            self.updateData(elm);
+            
+            if(elm.position.isValid()){
+                const {line, column} = elm.position;
+                elm.cleanPosition();
+                self.data[line][column] = elm;
+            } else {
+                throw new Error('Cannot clean invalid position');
+            }
+            
         });
     }
 
@@ -192,8 +222,9 @@ class Matrix {
                 let elm = self.getElement(new Position(line, column));
                 lineStr = `${lineStr}\t${elm.value}`; 
             });
-            console.log(lineStr);
+            console.log(lineStr + '\t\t\t\t' + Math.random());
         });
+        console.log('-------------------------');
     }
 }
 

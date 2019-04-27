@@ -16,3 +16,6 @@ serviceWorker.unregister();
 const data = Matrix.emptyBoardData();
 const matrix = new Matrix(data);
 matrix.print();
+
+matrix.pressedUp();
+matrix.print();

@@ -28,7 +28,7 @@ export class Position {
         return new Position(this.line, this.column+1);
     }
 
-    isValidPosition() {
+    isValid() {
         const {line, column} = this;
         return line >= 0 &&  line <= MAX_LINE && 
                 column >= 0 &&  column <= MAX_COLUMN;
